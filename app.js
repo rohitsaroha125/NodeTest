@@ -2,6 +2,7 @@ const path = require("path");
 const express = require("express");
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
+const errorControllers = require("./controllers/errors");
 
 const app = express();
 
@@ -16,9 +17,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/admin", adminRoutes.router);
 app.use(shopRoutes);
 
-app.use((req, res, next) => {
-  res.status(404).render("404", { pageTitle: "Not Found" });
-});
+app.use(errorControllers.error404);
 
 app.listen(5000, () => {
   console.log("Server Running");
