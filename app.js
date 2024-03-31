@@ -2,7 +2,7 @@ const path = require("path");
 const express = require("express");
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
-const errorControllers = require("./controllers/errors");
+const errorControllers = require("./controllers/error");
 
 const app = express();
 
@@ -14,10 +14,14 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/admin", adminRoutes.router);
-app.use(shopRoutes);
+app.get("/", (req, res, next) => {
+  res.render("fileUpload");
+});
 
-app.use(errorControllers.error404);
+// app.use("/admin", adminRoutes.router);
+// app.use(shopRoutes);
+
+app.use(errorControllers.get404);
 
 app.listen(5000, () => {
   console.log("Server Running");
