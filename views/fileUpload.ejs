@@ -2,8 +2,10 @@
   <head> </head>
   <body>
     <h1>Please upload file</h1>
-    <form>
+    <form action="/file-upload" method="POST" enctype="multipart/form-data">
+      <input typ="text" name="username" placeholder="Enter your username" />
       <input type="file" name="fileUpload" />
+      <button type="submit">Submit</button>
     </form>
   </body>
 </html>

@@ -3,6 +3,17 @@ const express = require("express");
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const errorControllers = require("./controllers/error");
+const multer = require("multer");
+
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().toISOString()+"-"+(Math.random()*100000)+"-" + file.originalname);
+  },
+});
+const uploads = multer({ storage: fileStorage });
 
 const app = express();
 
@@ -16,6 +27,13 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res, next) => {
   res.render("fileUpload");
+});
+
+app.post("/file-upload", uploads.single("fileUpload"), (req, res, next) => {
+  const username = req.body.username;
+  const file = req.file;
+  console.log("Username is ", username, file);
+  res.redirect("/");
 });
 
 // app.use("/admin", adminRoutes.router);
