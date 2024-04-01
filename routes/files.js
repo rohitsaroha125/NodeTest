@@ -2,6 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const pdfkit = require("pdfkit");
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -53,6 +54,12 @@ router.get("/invoice", (req, res, next) => {
 
 router.get("/order/:orderId", (req, res, next) => {
   const invoicePath = path.join(__dirname, "..", "uploads", "pdf", "blank.pdf");
+
+  //   fs.readFile(invoicePath, (err, data) => {
+  //     res.setHeader("content-type", "application/pdf");
+  //     res.setHeader("content-disposition", "attachment; filename=blank.pdf");
+  //     res.send(data);
+  //   });
 
   const file = fs.createReadStream(invoicePath);
   res.setHeader("content-type", "application/pdf");
