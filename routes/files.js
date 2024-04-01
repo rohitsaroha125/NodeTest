@@ -61,6 +61,7 @@ router.get("/order/:orderId", (req, res, next) => {
     }
     console.log("data is ", data);
     res.setHeader("content-type", "application/pdf");
+    res.setHeader("content-disposition", "attachment; filename=blank.pdf");
     res.send(data);
   });
 });
