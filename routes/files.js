@@ -3,9 +3,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const PdfKit = require("pdfkit");
-const stripe = require("stripe")(
-  "sk_test_51P0cwGSIXzn3Xs1iYZr018LCnS8LYPmExjeEAdEcecgLebnyFyobgRqjcJX2vNVhXbUKe3yXSuZVimfYYpkUs94D00l4thfgpz"
-);
+const stripe = require("stripe")("");
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
