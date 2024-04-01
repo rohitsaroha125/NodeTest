@@ -3,6 +3,9 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const PdfKit = require("pdfkit");
+const stripe = require("stripe")(
+  "sk_test_51P0cwGSIXzn3Xs1iYZr018LCnS8LYPmExjeEAdEcecgLebnyFyobgRqjcJX2vNVhXbUKe3yXSuZVimfYYpkUs94D00l4thfgpz"
+);
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -69,6 +72,35 @@ router.get("/order/:orderId", (req, res, next) => {
 
   pdfDoc.text("Hello World");
   pdfDoc.end();
+});
+
+router.get("/checkout", (req, res, next) => {
+  res.render("checkout");
+});
+
+router.get("/success", (req, res, next) => {
+  res.render("success");
+});
+
+router.get("/cancel", (req, res, next) => {
+  res.render("cancel");
+});
+
+router.post("/create-checkout-session", async (req, res) => {
+  const session = await stripe.checkout.sessions.create({
+    line_items: [
+      {
+        // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+        price: "price_1P0dJHSIXzn3Xs1inxhISLks",
+        quantity: 1,
+      },
+    ],
+    mode: "payment",
+    success_url: `http://localhost:5000/success`,
+    cancel_url: `http://localhost:5000/cancel`,
+  });
+
+  res.redirect(303, session.url);
 });
 
 module.exports = router;
