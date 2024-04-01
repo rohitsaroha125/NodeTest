@@ -2,7 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
-const pdfkit = require("pdfkit");
+const PdfKit = require("pdfkit");
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -61,10 +61,14 @@ router.get("/order/:orderId", (req, res, next) => {
   //     res.send(data);
   //   });
 
-  const file = fs.createReadStream(invoicePath);
+  const pdfDoc = new PdfKit();
   res.setHeader("content-type", "application/pdf");
   res.setHeader("content-disposition", "attachment; filename=blank.pdf");
-  file.pipe(res);
+  pdfDoc.pipe(fs.createWriteStream(invoicePath));
+  pdfDoc.pipe(res);
+
+  pdfDoc.text("Hello World");
+  pdfDoc.end();
 });
 
 module.exports = router;
