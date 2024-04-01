@@ -53,17 +53,11 @@ router.get("/invoice", (req, res, next) => {
 
 router.get("/order/:orderId", (req, res, next) => {
   const invoicePath = path.join(__dirname, "..", "uploads", "pdf", "blank.pdf");
-  fs.readFile(invoicePath, (err, data) => {
-    if (err) {
-      console.error(err);
-      res.sendStatus(500);
-      return;
-    }
-    console.log("data is ", data);
-    res.setHeader("content-type", "application/pdf");
-    res.setHeader("content-disposition", "attachment; filename=blank.pdf");
-    res.send(data);
-  });
+
+  const file = fs.createReadStream(invoicePath);
+  res.setHeader("content-type", "application/pdf");
+  res.setHeader("content-disposition", "attachment; filename=blank.pdf");
+  file.pipe(res);
 });
 
 module.exports = router;
