@@ -10,10 +10,31 @@ const fileStorage = multer.diskStorage({
     cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
-    cb(null, new Date().toISOString()+"-"+(Math.random()*100000)+"-" + file.originalname);
+    cb(
+      null,
+      new Date().toISOString() +
+        "-" +
+        Math.random() * 100000 +
+        "-" +
+        file.originalname
+    );
   },
 });
-const uploads = multer({ storage: fileStorage });
+
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === "image/png" ||
+    file.mimetype === "image/jpeg" ||
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/gif"
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+const uploads = multer({ storage: fileStorage, fileFilter });
 
 const app = express();
 
@@ -24,6 +45,7 @@ app.set("views", "views");
 app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.get("/", (req, res, next) => {
   res.render("fileUpload");
